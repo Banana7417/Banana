@@ -1,0 +1,12 @@
+SELECT 
+    Car.id AS car_id,
+    Car.model,
+    ROUND(SUM(JULIANDAY(Usage.end_time) - JULIANDAY(Usage.start_time)) * 24, 1) AS used_hours,
+    ROUND(24 * COUNT(DISTINCT DATE(Usage.start_time)), 1) AS total_hours,
+    ROUND(
+        (SUM(JULIANDAY(Usage.end_time) - JULIANDAY(Usage.start_time)) * 24 / (24 * COUNT(DISTINCT DATE(Usage.start_time)))) * 100, 
+        1
+    ) AS load_percentage
+FROM Car
+JOIN Usage ON Car.id = Usage.car_id
+GROUP BY Car.id;
